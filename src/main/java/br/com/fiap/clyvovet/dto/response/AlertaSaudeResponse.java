@@ -11,5 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AlertaSaudeResponse {
     private Long id;
+    private TipoAlerta tipoAlerta;
+    private String mensagem;
+    private LocalDateTime dataGeracao;
+    private Boolean lido;
+    private LocalDateTime dataLeitura;
+    private Long petId;
+    private String petNome;
 
 }
