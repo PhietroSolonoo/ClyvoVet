@@ -65,5 +65,9 @@ public class Pet {
     @OneToMany(mappedBy = "pet")
     private List<Medicamento> medicamentos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "pet")
+    private List<Exame> exames = new ArrayList<>();
 
+    @OneToMany(mappedBy = "pet")
+    private List<AlertaSaude> alertas = new ArrayList<>();
 }
