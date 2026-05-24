@@ -5,36 +5,32 @@ Projeto desenvolvido como solução para o **Challenge FIAP 2026** – turma Jav
 
 ---
 
-# 📋 Sumário
+## 📋 Sumário
 
-- [Sobre o projeto](#-sobre-o-projeto)
-- [Tecnologias utilizadas](#-tecnologias-utilizadas)
-- [Funcionalidades principais](#-funcionalidades-principais)
-- [Pré-requisitos](#-pré-requisitos)
-- [Configuração do banco de dados](#-configuração-do-banco-de-dados)
-- [Como executar o projeto](#-como-executar-o-projeto)
-- [Documentação da API (Swagger)](#-documentação-da-api-swagger)
-- [Estrutura do projeto](#-estrutura-do-projeto)
-- [Principais endpoints](#-principais-endpoints)
-- [Contribuição](#-contribuição)
-- [Equipe](#-equipe)
+- [📖 Sobre o projeto](#-sobre-o-projeto)
+- [🛠️ Tecnologias utilizadas](#️-tecnologias-utilizadas)
+- [⚙️ Pré-requisitos](#️-pré-requisitos)
+- [🗄️ Configuração do banco de dados](#️-configuração-do-banco-de-dados)
+- [🚀 Como executar o projeto](#-como-executar-o-projeto)
+- [🧪 Testando a API](#-testando-a-api)
+- [📚 Documentação da API (Swagger)](#-documentação-da-api-swagger)
+- [🧱 Estrutura do projeto](#-estrutura-do-projeto)
+- [📂 Artefatos de documentação](#-artefatos-de-documentação)
+- [👥 Equipe](#-equipe)
 
 ---
 
-# 📖 Sobre o projeto
+## 📖 Sobre o projeto
 
 O **ClyvoVet** resolve o problema da fragmentação na jornada de saúde do pet.  
 Tutores, clínicas e veterinários podem registrar e consultar:
 
 - Tutores e seus pets
 - Clínicas e veterinários
-- Consultas
-- Vacinas
-- Medicamentos
-- Exames
+- Consultas, vacinas, medicamentos e exames
 - Alertas de saúde (vacinas vencidas, retornos pendentes, etc.)
 
-A API segue os princípios RESTful, utilizando:
+A API segue os princípios RESTful, utiliza:
 
 - Paginação
 - Cache
@@ -43,79 +39,59 @@ A API segue os princípios RESTful, utilizando:
 
 ---
 
-# 🛠️ Tecnologias utilizadas
+## 🛠️ Tecnologias utilizadas
 
 - **Java 21**
 - **Spring Boot 3.4.5**
-- **Spring Data JPA + Hibernate**
+- **Spring Data JPA** + **Hibernate**
 - **Oracle Database** (19c/21c) – JDBC via ojdbc11
-- **Spring Cache**
-- **Spring Validation**
-- **SpringDoc OpenAPI (Swagger UI)**
+- **Spring Cache** (simple)
+- **Spring Validation** (Bean Validation)
+- **SpringDoc OpenAPI** (Swagger UI)
 - **Lombok**
-- **Gradle**
-- **Postman / Insomnia**
+- **Gradle** (build tool)
+- **Postman / Insomnia** (testes de API)
 
 ---
 
-# ✨ Funcionalidades principais
+## ⚙️ Pré-requisitos
 
-- CRUD completo de tutores, pets, clínicas e veterinários
-- Agendamento e histórico de consultas
-- Registro de vacinas, medicamentos e exames
-- Geração automática de alertas de saúde
-- Paginação e ordenação em todas as listagens
-- Cache de consultas com `@Cacheable`
-- Tratamento global de erros com `@ControllerAdvice`
-- Documentação interativa via Swagger UI
+Antes de executar o projeto, certifique-se de ter instalado:
 
----
-
-# ⚙️ Pré-requisitos
-
-Antes de executar o projeto, certifique-se de possuir:
-
-- **JDK 21**
-- **Oracle Database**
-- **Gradle** (opcional)
+- **JDK 21** (ou superior compatível)
+- **Oracle Database** (local ou remoto)
+- **Gradle** (opcional – o projeto inclui o Gradle Wrapper)
 - **Git**
-
-> O projeto já inclui o **Gradle Wrapper**.
+- **Postman** (opcional)
 
 ---
 
-# 🗄️ Configuração do banco de dados
+## 🗄️ Configuração do banco de dados
 
-1. Certifique-se de que o Oracle Database está em execução.
-2. Crie um usuário/schema com permissões para criar tabelas e sequences.
-3. Configure o arquivo:
-
-```properties
-src/main/resources/application.properties
-```
-
-Exemplo:
+1. Certifique-se de que o Oracle Database está ativo.
+2. Crie um usuário/schema com privilégios para criar tabelas e sequences.
+3. Altere o arquivo `src/main/resources/application.properties` com as suas credenciais:
 
 ```properties
 spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl
 spring.datasource.username=SEU_USUARIO
 spring.datasource.password=SUA_SENHA
-```
+spring.jpa.hibernate.ddl-auto=update
 
-> O parâmetro `ddl-auto=update` criará automaticamente as tabelas e sequences ao iniciar a aplicação.
+> **Nota:** O parâmetro `spring.jpa.hibernate.ddl-auto=update` criará automaticamente as tabelas e sequences ao iniciar a aplicação.
 
 ---
 
 # 🚀 Como executar o projeto
 
-## Clone o repositório
+## 1. Clone o repositório
 
 ```bash
 git clone https://github.com/PhietroSolonoo/ClyvoVet.git
 cd ClyvoVet
 ```
 
-## Execute a aplicação
+## 2. Execute a aplicação via Gradle Wrapper
 
 ### Linux / Mac
 
@@ -129,17 +105,117 @@ cd ClyvoVet
 gradlew.bat bootRun
 ```
 
-Ou execute diretamente a classe:
+Ou via IntelliJ IDEA: abra o projeto e execute a classe `ClyvovetApplication`.
 
-```java
-ClyvovetApplication.java
-```
+A aplicação iniciará na porta `8080`.
 
-A aplicação iniciará em:
+Você verá no console:
 
 ```text
-http://localhost:8080
+Started ClyvovetApplication ...
 ```
+
+---
+
+# 🧪 Testando a API
+
+## ✅ 1. Usando o Swagger UI (recomendado)
+
+Acesse:
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+Lá você pode:
+
+- Visualizar todos os endpoints
+- Ver parâmetros e exemplos
+- Executar requisições diretamente no navegador
+
+---
+
+## ✅ 2. Usando a coleção Postman
+
+A coleção Postman com todos os endpoints está disponível na pasta `documents/`.
+
+### Como importar
+
+1. Abra o Postman
+2. Clique em **File → Import**
+3. Vá na aba **Upload Files**
+4. Selecione o arquivo:
+
+```text
+documents/ClyvoVet API.postman_collection.json
+```
+
+A coleção aparecerá automaticamente na barra lateral.
+
+---
+
+### Ordem recomendada para testes
+
+Execute as requisições nesta ordem:
+
+1. Tutores
+2. Pets
+3. Clínicas
+4. Veterinários
+5. Consultas
+6. Vacinas
+7. Medicamentos
+8. Exames
+9. Alertas
+
+---
+
+### Observações
+
+Para endpoints `GET`, utilize filtros como:
+
+```http
+GET /pets?especie=CACHORRO
+```
+
+Para `POST`, `PUT` e `DELETE`, garanta que os IDs relacionados existam no banco.
+
+---
+
+## ✅ 3. Exemplos de endpoints
+
+```http
+POST   /tutores
+GET    /tutores
+GET    /tutores/{id}
+PUT    /tutores/{id}
+DELETE /tutores/{id}
+
+GET    /pets?tutorId=1
+
+GET    /vacinas/vencidas
+
+PATCH  /alertas/{id}/lido
+```
+
+---
+
+## ✅ 4. Populando o banco
+
+O banco será criado vazio.
+
+Você pode:
+
+- Inserir dados manualmente via Postman
+- Executar scripts SQL da pasta `documents/` (caso existam)
+
+### Recomendação mínima de dados
+
+- 2 tutores
+- 2 pets
+- 1 clínica
+- 1 veterinário
+- 1 consulta
 
 ---
 
@@ -151,12 +227,11 @@ Com a aplicação em execução, acesse:
 http://localhost:8080/swagger-ui.html
 ```
 
-No Swagger UI você poderá:
+A interface Swagger permite:
 
-- Visualizar endpoints
-- Testar requisições
+- Navegar pelos endpoints
 - Ver exemplos de request/response
-- Consultar parâmetros e validações
+- Testar a API diretamente
 
 ---
 
@@ -164,48 +239,31 @@ No Swagger UI você poderá:
 
 ```text
 src/main/java/br/com/fiap/clyvovet/
-├── config/            # Configurações da aplicação
-├── controller/        # Controllers REST
+├── config/            # Configurações (Cache, Swagger)
+├── controller/        # 9 controllers REST
 ├── dto/
-│   ├── request/       # DTOs de entrada
+│   ├── request/       # DTOs de entrada com validação
 │   └── response/      # DTOs de saída
 ├── enums/             # Enums do sistema
-├── exception/         # Tratamento global de exceções
-├── mapper/            # Conversão entre entidades e DTOs
+├── exception/         # Exceptions e handler global
+├── mapper/            # Conversores DTO ↔ Entity
 ├── model/             # Entidades JPA
 ├── repository/        # Interfaces Spring Data JPA
-└── service/           # Regras de negócio
+└── service/           # Regras de negócio e cache
 ```
 
 ---
 
-# 🔌 Principais endpoints
+# 📂 Artefatos de documentação
 
-| Recurso | Método | Endpoint | Descrição |
-|---|---|---|---|
-| Tutores | POST | `/tutores` | Cadastrar tutor |
-| Tutores | GET | `/tutores` | Listar tutores |
-| Tutores | GET | `/tutores/{id}` | Buscar tutor por ID |
-| Tutores | PUT | `/tutores/{id}` | Atualizar tutor |
-| Tutores | DELETE | `/tutores/{id}` | Remover tutor |
-| Pets | POST | `/pets` | Cadastrar pet |
-| Pets | GET | `/pets` | Listar pets |
-| Pets | GET | `/pets/{id}/consultas` | Consultas do pet |
-| Consultas | POST | `/consultas` | Agendar consulta |
-| Consultas | GET | `/consultas` | Listar consultas |
-| Vacinas | POST | `/vacinas` | Registrar vacina |
-| Vacinas | GET | `/vacinas/vencidas` | Vacinas vencidas |
-| Alertas | GET | `/alertas/nao-lidos` | Alertas não lidos |
-| Alertas | PATCH | `/alertas/{id}/lido` | Marcar alerta como lido |
+A pasta `documents/` contém:
 
-> A listagem completa está disponível no Swagger.
-
----
-
-# 🤝 Contribuição
-
-Projeto desenvolvido para fins acadêmicos.  
-Sugestões e melhorias são bem-vindas via issues ou pull requests.
+| Arquivo | Descrição |
+|---|---|
+| `ClyvoVet API.postman_collection.json` | Coleção completa do Postman |
+| `der.png` | DER gerado no Oracle SQL Developer |
+| `diagrama-classes.png` | Diagrama UML gerado no IntelliJ IDEA |
+| `cronograma.md` | Cronograma detalhado do projeto |
 
 ---
 
@@ -216,5 +274,3 @@ Sugestões e melhorias são bem-vindas via issues ou pull requests.
 | Phietro Solon Oliveira | RM563842 |
 | Matheus Almeida Ribeiro | RM562980 |
 | Gustavo Barrios de Araujo | RM563358 |
-
----
