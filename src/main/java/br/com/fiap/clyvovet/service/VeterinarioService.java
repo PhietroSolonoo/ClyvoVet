@@ -52,7 +52,7 @@ public class VeterinarioService {
                 .map(veterinarioMapper::toResponse);
     }
 
-    // NOVO MÉTODO COM FILTROS (especialidade, clinicaId)
+
     @Cacheable(value = "veterinarios")
     public Page<VeterinarioResponse> findAll(String especialidade, Long clinicaId, Pageable pageable) {
         if (especialidade != null && !especialidade.isEmpty()) {

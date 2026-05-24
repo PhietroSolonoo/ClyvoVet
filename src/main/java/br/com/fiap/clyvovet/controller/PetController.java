@@ -106,8 +106,7 @@ public class PetController {
     public ResponseEntity<Page<ConsultaResponse>> getConsultasByPetId(
             @PathVariable Long id,
             @PageableDefault(size = 10, sort = "dataHora", direction = Sort.Direction.DESC) Pageable pageable) {
-        // Aqui você pode implementar diretamente no service ou usar consultaService com filtro por petId
-        // Vamos assumir que consultaService tem método findByPetId
+
         Page<ConsultaResponse> page = consultaService.findByPetId(id, pageable);
         return ResponseEntity.ok(page);
     }
