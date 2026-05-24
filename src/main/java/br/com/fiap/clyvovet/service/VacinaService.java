@@ -1,5 +1,7 @@
 package br.com.fiap.clyvovet.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,6 +52,40 @@ public class VacinaService {
     public Page<VacinaResponse> findAll(Pageable pageable) {
         return vacinaRepository.findAll(pageable)
                 .map(vacinaMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "vacinas")
+    public Page<VacinaResponse> findAll(Long petId, String nome, Pageable pageable) {
+        if (petId != null) {
+            return vacinaRepository.findByPetId(petId, pageable).map(vacinaMapper::toResponse);
+        }
+        if (nome != null && !nome.isEmpty()) {
+            return vacinaRepository.findByNomeContainingIgnoreCase(nome, pageable).map(vacinaMapper::toResponse);
+        }
+        return vacinaRepository.findAll(pageable).map(vacinaMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "vacinas")
+    public Page<VacinaResponse> findVacinasVencidas(Pageable pageable) {
+        return vacinaRepository.findVacinasVencidas(LocalDate.now(), pageable)
+                .map(vacinaMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "vacinas")
+    public Page<VacinaResponse> findVacinasProximas(Pageable pageable) {
+        LocalDate hoje = LocalDate.now();
+        LocalDate limite = hoje.plusDays(30);
+        return vacinaRepository.findVacinasProximas(hoje, limite, pageable)
+                .map(vacinaMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "vacinas")
+    public Page<VacinaResponse> findByPetId(Long petId, Pageable pageable) {
+        return vacinaRepository.findByPetId(petId, pageable).map(vacinaMapper::toResponse);
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fiap.clyvovet.dto.request.AlertaSaudeRequest;
 import br.com.fiap.clyvovet.dto.response.AlertaSaudeResponse;
+import br.com.fiap.clyvovet.enums.TipoAlerta;
 import br.com.fiap.clyvovet.exception.ResourceNotFoundException;
 import br.com.fiap.clyvovet.mapper.AlertaSaudeMapper;
 import br.com.fiap.clyvovet.model.AlertaSaude;
@@ -49,6 +50,42 @@ public class AlertaSaudeService {
     @Cacheable(value = "alertas")
     public Page<AlertaSaudeResponse> findAll(Pageable pageable) {
         return alertaSaudeRepository.findAll(pageable)
+                .map(alertaSaudeMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "alertas")
+    public Page<AlertaSaudeResponse> findAll(Long petId, TipoAlerta tipo, Boolean lido, Pageable pageable) {
+        if (petId != null) {
+            return alertaSaudeRepository.findByPetId(petId, pageable)
+                    .map(alertaSaudeMapper::toResponse);
+        }
+        if (tipo != null) {
+            return alertaSaudeRepository.findByTipoAlerta(tipo, pageable)
+                    .map(alertaSaudeMapper::toResponse);
+        }
+        if (lido != null) {
+            if (lido) {
+
+                return alertaSaudeRepository.findByLidoTrue(pageable).map(alertaSaudeMapper::toResponse);
+            } else {
+                return alertaSaudeRepository.findByLidoFalse(pageable).map(alertaSaudeMapper::toResponse);
+            }
+        }
+        return alertaSaudeRepository.findAll(pageable).map(alertaSaudeMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "alertas")
+    public Page<AlertaSaudeResponse> findNaoLidos(Pageable pageable) {
+        return alertaSaudeRepository.findByLidoFalse(pageable)
+                .map(alertaSaudeMapper::toResponse);
+    }
+
+    // Método auxiliar para buscar por petId (usado no PetController)
+    @Cacheable(value = "alertas")
+    public Page<AlertaSaudeResponse> findByPetId(Long petId, Pageable pageable) {
+        return alertaSaudeRepository.findByPetId(petId, pageable)
                 .map(alertaSaudeMapper::toResponse);
     }
 

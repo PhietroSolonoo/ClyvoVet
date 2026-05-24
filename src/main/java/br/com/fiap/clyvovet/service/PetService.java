@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fiap.clyvovet.dto.request.PetRequest;
 import br.com.fiap.clyvovet.dto.response.PetResponse;
+import br.com.fiap.clyvovet.enums.Especie;
 import br.com.fiap.clyvovet.exception.ResourceNotFoundException;
 import br.com.fiap.clyvovet.mapper.PetMapper;
 import br.com.fiap.clyvovet.model.Pet;
@@ -51,6 +52,23 @@ public class PetService {
         return petRepository.findAll(pageable)
                 .map(petMapper::toResponse);
     }
+
+
+    @Cacheable(value = "pets")
+    public Page<PetResponse> findAll(Especie especie, String raca, Long tutorId, Pageable pageable) {
+        Page<Pet> page;
+        if (especie != null) {
+            page = petRepository.findByEspecie(especie, pageable);
+        } else if (raca != null && !raca.isEmpty()) {
+            page = petRepository.findByRacaContainingIgnoreCase(raca, pageable);
+        } else if (tutorId != null) {
+            page = petRepository.findByTutorId(tutorId, pageable);
+        } else {
+            page = petRepository.findAll(pageable);
+        }
+        return page.map(petMapper::toResponse);
+    }
+
 
     @Transactional
     @CacheEvict(value = "pets", allEntries = true)

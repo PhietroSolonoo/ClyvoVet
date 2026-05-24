@@ -52,6 +52,20 @@ public class VeterinarioService {
                 .map(veterinarioMapper::toResponse);
     }
 
+    // NOVO MÉTODO COM FILTROS (especialidade, clinicaId)
+    @Cacheable(value = "veterinarios")
+    public Page<VeterinarioResponse> findAll(String especialidade, Long clinicaId, Pageable pageable) {
+        if (especialidade != null && !especialidade.isEmpty()) {
+            return veterinarioRepository.findByEspecialidadeContainingIgnoreCase(especialidade, pageable)
+                    .map(veterinarioMapper::toResponse);
+        }
+        if (clinicaId != null) {
+            return veterinarioRepository.findByClinicaId(clinicaId, pageable)
+                    .map(veterinarioMapper::toResponse);
+        }
+        return veterinarioRepository.findAll(pageable).map(veterinarioMapper::toResponse);
+    }
+
     @Transactional
     @CacheEvict(value = "veterinarios", allEntries = true)
     public VeterinarioResponse update(Long id, VeterinarioRequest request) {

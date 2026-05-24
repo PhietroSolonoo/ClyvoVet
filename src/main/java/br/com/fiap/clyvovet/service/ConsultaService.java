@@ -1,5 +1,7 @@
 package br.com.fiap.clyvovet.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fiap.clyvovet.dto.request.ConsultaRequest;
 import br.com.fiap.clyvovet.dto.response.ConsultaResponse;
+import br.com.fiap.clyvovet.enums.StatusConsulta;
+import br.com.fiap.clyvovet.enums.TipoConsulta;
 import br.com.fiap.clyvovet.exception.ResourceNotFoundException;
 import br.com.fiap.clyvovet.mapper.ConsultaMapper;
 import br.com.fiap.clyvovet.model.Consulta;
@@ -56,6 +60,34 @@ public class ConsultaService {
     @Cacheable(value = "consultas")
     public Page<ConsultaResponse> findAll(Pageable pageable) {
         return consultaRepository.findAll(pageable)
+                .map(consultaMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "consultas")
+    public Page<ConsultaResponse> findAll(TipoConsulta tipo, StatusConsulta status, Long petId, Long veterinarioId,
+                                          LocalDateTime dataInicio, LocalDateTime dataFim, Pageable pageable) {
+        if (petId != null) {
+            return consultaRepository.findByPetId(petId, pageable).map(consultaMapper::toResponse);
+        }
+        if (veterinarioId != null) {
+            return consultaRepository.findByVeterinarioId(veterinarioId, pageable).map(consultaMapper::toResponse);
+        }
+        if (tipo != null) {
+            return consultaRepository.findByTipoConsulta(tipo, pageable).map(consultaMapper::toResponse);
+        }
+        if (status != null) {
+            return consultaRepository.findByStatusConsulta(status, pageable).map(consultaMapper::toResponse);
+        }
+        if (dataInicio != null && dataFim != null) {
+            return consultaRepository.findConsultasNoPeriodo(dataInicio, dataFim, pageable).map(consultaMapper::toResponse);
+        }
+        return consultaRepository.findAll(pageable).map(consultaMapper::toResponse);
+    }
+
+    @Cacheable(value = "consultas")
+    public Page<ConsultaResponse> findByPetId(Long petId, Pageable pageable) {
+        return consultaRepository.findByPetId(petId, pageable)
                 .map(consultaMapper::toResponse);
     }
 

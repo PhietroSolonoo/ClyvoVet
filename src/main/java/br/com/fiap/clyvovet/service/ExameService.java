@@ -1,5 +1,7 @@
 package br.com.fiap.clyvovet.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -57,6 +59,31 @@ public class ExameService {
     public Page<ExameResponse> findAll(Pageable pageable) {
         return exameRepository.findAll(pageable)
                 .map(exameMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "exames")
+    public Page<ExameResponse> findAll(Long petId, String tipo, Long consultaId,
+                                       LocalDate dataInicio, LocalDate dataFim, Pageable pageable) {
+        if (petId != null) {
+            return exameRepository.findByPetId(petId, pageable).map(exameMapper::toResponse);
+        }
+        if (consultaId != null) {
+            return exameRepository.findByConsultaId(consultaId, pageable).map(exameMapper::toResponse);
+        }
+        if (tipo != null && !tipo.isEmpty()) {
+            return exameRepository.findByTipoContainingIgnoreCase(tipo, pageable).map(exameMapper::toResponse);
+        }
+        if (dataInicio != null && dataFim != null) {
+            return exameRepository.findByDataRealizacaoBetween(dataInicio, dataFim, pageable).map(exameMapper::toResponse);
+        }
+        return exameRepository.findAll(pageable).map(exameMapper::toResponse);
+    }
+
+
+    @Cacheable(value = "exames")
+    public Page<ExameResponse> findByPetId(Long petId, Pageable pageable) {
+        return exameRepository.findByPetId(petId, pageable).map(exameMapper::toResponse);
     }
 
     @Transactional
