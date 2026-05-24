@@ -1,6 +1,8 @@
 package br.com.fiap.clyvovet.repository;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +12,12 @@ import br.com.fiap.clyvovet.model.AlertaSaude;
 import br.com.fiap.clyvovet.enums.TipoAlerta;
 
 public interface AlertaSaudeRepository extends JpaRepository<AlertaSaude, Long> {
+
+
+    Page<AlertaSaude> findByPetId(Long petId, Pageable pageable);
+    Page<AlertaSaude> findByTipoAlerta(TipoAlerta tipo, Pageable pageable);
+    Page<AlertaSaude> findByLidoFalse(Pageable pageable);
+    Page<AlertaSaude> findByLidoTrue(Pageable pageable);
     List<AlertaSaude> findByPetId(Long petId);
     List<AlertaSaude> findByTipoAlerta(TipoAlerta tipo);
     List<AlertaSaude> findByLidoFalse();

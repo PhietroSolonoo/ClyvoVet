@@ -12,19 +12,13 @@ import br.com.fiap.clyvovet.model.Tutor;
 
 public interface TutorRepository extends JpaRepository<Tutor, Long> {
 
-    // Busca por nome contendo (ignorando maiúsculas/minúsculas)
+    // Buscas por nome, email, cpf e etc
     List<Tutor> findByNomeContainingIgnoreCase(String nome);
-
-    // Busca por email (exato, para login/validação)
     Tutor findByEmail(String email);
-
-    // Busca por CPF
     Tutor findByCpf(String cpf);
-
-    // Busca paginada por nome contendo
     Page<Tutor> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 
-    // JPQL: busca tutores que tenham pets com espécie específica
+
     @Query("SELECT DISTINCT t FROM Tutor t JOIN t.pets p WHERE p.especie = :especie")
     List<Tutor> findTutoresByPetEspecie(@Param("especie") String especie);
 }
